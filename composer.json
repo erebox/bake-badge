@@ -1,0 +1,21 @@
+{
+    "name": "erebox/bake-badge",
+    "description": "PHP Badge Baker",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["OpenBadge", "Baker", "png", "svg"],
+    "homepage": "https://github.com/erebox/bake-badge",    
+    "authors": [
+        {
+            "name": "Erebox",
+            "email": "erebox@gmail.com",
+            "homepage": "https://github.com/erebox"
+        }
+    ],
+    "require": {
+        "php": "^7"
+    },
+    "autoload": {
+        "psr-4": { "Erebox\\BakeBadge\\": "src/" }
+    }
+}
