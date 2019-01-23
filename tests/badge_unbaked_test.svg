@@ -1,6 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" 
   xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xmlns:openbadges="http://openbadges.org"
   viewBox="0 0 400 400" width="400" height="400">
+<openbadges:assertion verify="http://yoursite.com/new-badge-award.json">
+<![CDATA[
+{"uid":"123456789abcdefghi987654321jklmnopqr",
+...
+}]]>
+</openbadges:assertion>
 <svg viewBox="0 0 78.2 100" width="289" height="370" x="55" y="15">
   <path fill="#F9D952" d="M40.5,0.4C40,0.2,39.5,0,39.4,0c-0.1,0-0.3,0-0.5,0c-0.1,0-0.6,0.2-1.1,0.4L1,17.9c-0.5,0.2-0.9,0.9-0.9,1.4
     c0,0,0,22.5,0,35.7c0,34.3,38,44.7,38,44.7c0.5,0.1,1.4,0.1,1.9,0c0,0,38-10.4,38-44.7c0-13.2,0-35.7,0-35.7c0-0.6-0.4-1.2-0.9-1.4
