@@ -1,11 +1,13 @@
 <?php
 
 namespace Erebox\BakeBadge;
+use Erebox\BakeBadge\SimpleXMLElementCData;
 
 class BakeSVG implements BakeInterface
 {
     private $content = "";
     private $xml = false;
+    private $ns = [];
 	
     private $error = false;
     private $error_msg = "";
@@ -16,42 +18,45 @@ class BakeSVG implements BakeInterface
 			$this->error = true;
             $this->error_msg = 'Error loading '.$filename;
         } else {
-            $this->xml = simplexml_load_string($this->content);
+            $this->xml = new SimpleXMLElementCData($this->content);
             if (!$this->xml) {
                 $this->error = true;
                 $this->error_msg = 'Error xml on '.$filename;    
             } else {
-                $doc = $this->xml->getDocNamespaces(true);
-                print_r($doc);
-                $ob = $this->xml->children($doc['openbadges']);
-                print_r($ob);
-                echo $ob->assertion."\n";
-                //echo "*".isset($this->xml['xmlns'])."*\n";
+                $this->ns = $this->xml->getDocNamespaces(true);
             }
         }
     }
 
     public function isBaked() {
-        /*
-        if ($this->existPngChunk("tEXt", "openbadges")) {
-            return true;
-        } else if ($this->existPngChunk("iTXt", "openbadges")) {
-            return true;
-        } else {
-            return false;
+        if (isset($this->ns['openbadges'])) {
+            $ns_obj = $this->ns['openbadges'];
+            $obj = $this->xml->children($ns_obj);
+            if (isset($obj->assertion)) {
+                return true;
+            }
         }
-        */
         return false;
     }
 
     public function bake($value) {
         if (!$this->isBaked()) {
-            //return $this->addPngChunk("iTXt", "openbadges", $value);
-            return "";
+            $this->xml->addAttribute('xmlns:xmlns:openbadges', 'http://openbadges.org');
+            $this->xml->addChildCData("openbadges:openbadges:assertion",$value);
+            return $this->xml->asXML();
         } else {
             $this->error = true;
             $this->error_msg = 'SVG already baked';
             return false;
+        }
+    }
+    
+    public function bakeShow($value) {
+        $img = $this->bake($value);
+        if ($img) {
+            header('Content-Type: image/svg+xml');
+            echo $img;
+            exit();        
         }
     }
 

@@ -52,6 +52,15 @@ class BakePNG implements BakeInterface
             return false;
         }
     }
+    
+    public function bakeShow($value) {
+        $img = $this->bake($value);
+        if ($img) {
+            header('Content-Type: image/png');
+            echo $img;
+            exit();        
+        }
+    }
 
     private function load($file) {
         if(file_exists($file)) {
