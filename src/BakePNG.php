@@ -7,7 +7,8 @@ class BakePNG implements BakeInterface
     private $content = "";
     private $size = 0;
     private $chunks = [];
-	
+    
+    private $png_header = "\x89PNG\x0d\x0a\x1a\x0a";
     private $error = false;
     private $error_msg = "";
 
@@ -18,7 +19,7 @@ class BakePNG implements BakeInterface
             $this->error_msg = 'Error loading '.$filename;
         } else {
             $header = substr($this->content, 0, 8); 
-            if ($header != pack("C8", 137, 80, 78, 71, 13, 10, 26, 10)) { //PNG signature
+            if ($header != $this->png_header) {
                 $this->error = true;
                 $this->error_msg = 'PNG image not valid';
             } else {
@@ -82,6 +83,12 @@ class BakePNG implements BakeInterface
         return false;
     }
 
+
+    private function createPngChunk($type, $key, $text) {
+        $data = $key."\0".$text;
+        return pack("N", strlen($data)).$type.$data.pack("N", crc32($type.$data));
+    }
+
     private function addPngChunk($type, $key, $value) {
         if (strlen($key) > 79) {
 			$this->error = true;
@@ -89,10 +96,7 @@ class BakePNG implements BakeInterface
 			return "";
         } else {
             if (!$this->error) {
-                $data = $key . "\0" . $value;
-                $len = pack("N", strlen($data));
-                $crc = pack("N", crc32($type . $data));
-                $newchunk = $len . $type . $data . $crc;
+                $newchunk = $this->createPngChunk($type, $key, $value);
                 $result = substr($this->content, 0, $this->size - 12)
                         . $newchunk
                         . substr($this->content, $this->size - 12, 12);
